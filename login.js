@@ -43,9 +43,7 @@
     // Si el usuario ya está logueado, mostrar bienvenida
     const storedUser = JSON.parse(localStorage.getItem('user'));
     if (storedUser) {
-      loginForm.style.display = 'none';
-      welcomeDiv.style.display = 'block';
-      welcomeDiv.innerText = `Bienvenido ${storedUser.nombre}`;
+    window.location.href = 'bienvenida.html';
     }
 
 }
