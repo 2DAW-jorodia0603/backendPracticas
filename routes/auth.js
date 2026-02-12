@@ -1,5 +1,8 @@
 import supabase from "../config/supabase.js";
 import captchas from "../middleware/captchaStore.js";
+import { sendVerificationEmail } from "../utils/email.js";
+
+const verificationCodes = new Map();
 
 export default function authRoutes(app) {
   // REGISTER
@@ -16,6 +19,48 @@ export default function authRoutes(app) {
     if (!email || !password || password.length < 6) {
       return res.status(400).json({ error: "Email o password inválido (mínimo 6 caracteres)" });
     }
+
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
+
+    try {
+      await sendVerificationEmail(email, code);
+
+      verificationCodes.set(email, { code, timestamp: Date.now() });
+
+      res.json({
+        message: "Código de verificación enviado a tu email. Revisa tu bandeja de entrada.",
+        requiresVerification: true
+      });
+    } catch (err) {
+      res.status(500).json({ error: "Error enviando email de verificación: " + err.message });
+    }
+  });
+
+  // VERIFY
+  app.post("/verify", async (req, res) => {
+    const { email, code, password, nombre, rol = "usuario" } = req.body;
+
+    if (!email || !code) {
+      return res.status(400).json({ error: "Email y código requeridos" });
+    }
+
+    const stored = verificationCodes.get(email);
+    if (!stored) {
+      return res.status(400).json({ error: "Código no encontrado o expirado" });
+    }
+
+    // Verificar expiración (10 minutos)
+    if (Date.now() - stored.timestamp > 10 * 60 * 1000) {
+      verificationCodes.delete(email);
+      return res.status(400).json({ error: "Código expirado" });
+    }
+
+    if (stored.code !== code) {
+      return res.status(400).json({ error: "Código incorrecto" });
+    }
+
+    // Limpiar código usado
+    verificationCodes.delete(email);
 
     try {
       const { data: authData, error: authError } = await supabase.auth.admin.createUser({
