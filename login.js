@@ -26,10 +26,7 @@
           localStorage.setItem('access_token', data.access_token);
           localStorage.setItem('user', JSON.stringify(data.user));
 
-          loginForm.style.display = 'none';
-          welcomeDiv.style.display = 'block';
-          welcomeDiv.innerText = `Bienvenido ${data.user.nombre}`;
-          messageDiv.innerText = '';
+          window.location.href = 'bienvenida.html';
         } else {
           messageDiv.style.color = 'red';
           messageDiv.innerText = data.error || JSON.stringify(data.error);
@@ -45,5 +42,4 @@
     if (storedUser) {
     window.location.href = 'bienvenida.html';
     }
-
 }
