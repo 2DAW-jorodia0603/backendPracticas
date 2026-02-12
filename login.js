@@ -26,14 +26,11 @@
           localStorage.setItem('access_token', data.access_token);
           localStorage.setItem('user', JSON.stringify(data.user));
 
-          loginForm.style.display = 'none';
-          welcomeDiv.style.display = 'block';
-          welcomeDiv.innerText = `Bienvenido ${data.user.nombre}`;
-          messageDiv.innerText = '';
+          window.location.href = '../frontendPracticas/bienvenida.html';
         } else {
           messageDiv.style.color = 'red';
           messageDiv.innerText = data.error || JSON.stringify(data.error);
-        }
+        }v
       } catch (error) {
         messageDiv.style.color = 'red';
         messageDiv.innerText = error.message;
@@ -43,9 +40,7 @@
     // Si el usuario ya está logueado, mostrar bienvenida
     const storedUser = JSON.parse(localStorage.getItem('user'));
     if (storedUser) {
-      loginForm.style.display = 'none';
-      welcomeDiv.style.display = 'block';
-      welcomeDiv.innerText = `Bienvenido ${storedUser.nombre}`;
+      window.location.href = '../frontendPracticas/bienvenida.html';
     }
 
 }
