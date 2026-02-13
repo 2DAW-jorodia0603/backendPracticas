@@ -1,7 +1,6 @@
 "use strict"
 
 {
-
     const loginForm = document.getElementById('loginForm');
     const messageDiv = document.getElementById('message');
     const welcomeDiv = document.getElementById('welcome');
@@ -26,7 +25,12 @@
           localStorage.setItem('access_token', data.access_token);
           localStorage.setItem('user', JSON.stringify(data.user));
 
-          window.location.href = 'bienvenida.html';
+          // Redirigir según el rol del usuario
+          if (data.user.rol === 'admin') {
+            window.location.href = 'admin.html';
+          } else {
+            window.location.href = 'bienvenida.html';
+          }
         } else {
           messageDiv.style.color = 'red';
           messageDiv.innerText = data.error || JSON.stringify(data.error);
@@ -40,6 +44,10 @@
     // Si el usuario ya está logueado, mostrar bienvenida
     const storedUser = JSON.parse(localStorage.getItem('user'));
     if (storedUser) {
-    window.location.href = 'bienvenida.html';
+      if (storedUser.rol === 'admin') {
+        window.location.href = 'admin.html';
+      } else {
+        window.location.href = 'bienvenida.html';
+      }
     }
 }
