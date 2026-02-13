@@ -21,6 +21,12 @@
   document.getElementById('profileEmail').textContent = user.email;
   document.getElementById('profileRole').textContent = user.rol;
 
+  // ⬇️⬇️⬇️ NUEVO: Mostrar botón PANEL ADMIN si el usuario es admin ⬇️⬇️⬇️
+  if (user.rol === 'admin') {
+    document.getElementById('adminPanelBtn').style.display = 'block';
+  }
+  // ⬆️⬆️⬆️ FIN DE LA MODIFICACIÓN ⬆️⬆️⬆️
+
   document.getElementById('logoutBtn').addEventListener('click', () => {
     localStorage.removeItem('user');
     localStorage.removeItem('access_token');
